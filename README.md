@@ -16,7 +16,7 @@ https://jechyang.github.io/2020/09/14/LayoutGroup%E4%BB%A5%E5%8F%8AContentSizeFi
 
 这里基于UGUI的HorzontalLayoutGroup、VerticalLayoutGroup、GridLayoutGroup，写了对应的Loop版本，然后主要就是更改RebuildLayout中的四个流程方法，本来是根据ChildrenGameObjects来计算各种sizes的(preferred/min/flex size)，这里直接改成使用设置的Models来进行计算。得到了content的sizes(min/preferred/flex)之后就可以利用ContentSizeFitter控件将ContentSize设置上去了，同时也得到了child相关的位置信息，同样存储在model中，这样在scrollrect滚动的过程中就知道要刷新哪些cell了。
 
-这里的size设置是遵循ugui的布局的，因此不规则的列表也可以很好地显示(聊天之类的按照文字确认高度)
+这里的size设置是遵循ugui的布局的，因此不规则的列表也可以很好地显示(聊天之类的按照文字确认高度)，如果是规则列表的话直接使用LoopGridLayout即可。
 
 ## 效果展示
 
@@ -63,7 +63,7 @@ https://jechyang.github.io/2020/09/14/LayoutGroup%E4%BB%A5%E5%8F%8AContentSizeFi
   }
   ```
 
-  CellModel也需要继承自BaseModel，然后只需要复写所对应的**CellType**属性即可，如下所示
+  CellModel也需要继承自BaseModel，然后只需要重写所对应的**CellType**属性即可，如下所示
 
   ```c#
   public class TestModel : BaseLoopModel
