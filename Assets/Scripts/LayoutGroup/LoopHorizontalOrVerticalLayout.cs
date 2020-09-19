@@ -70,7 +70,7 @@ public abstract class LoopHorizontalOrVerticalLayout : HorizontalOrVerticalLayou
         for (int i = 0; i < _loopModels.Count; i++)
         {
             var go = ObjectPool.GetObject(_loopModels[i].CellType);
-            LoopCalUtil.RefreshViewAndRebuild(go,_loopModels[i]);
+            LoopCalUtil.RefreshViewAndRebuild(axis,go,_loopModels[i]);
 
             float min, preferred, flexible;
             LoopCalUtil.GetChildSizes(go.transform as RectTransform, axis, controlSize, childForceExpandSize, out min, out preferred, out flexible);
@@ -123,24 +123,18 @@ public abstract class LoopHorizontalOrVerticalLayout : HorizontalOrVerticalLayou
                 var go = ObjectPool.GetObject(_loopModels[i].CellType);
                 var child = go.transform as RectTransform;
                 float min, preferred, flexible;
-                LoopCalUtil.RefreshViewAndRebuild(go,_loopModels[i]);
+                LoopCalUtil.RefreshViewAndRebuild(axis,go,_loopModels[i]);
                 LoopCalUtil.GetChildSizes(child,axis, controlSize, childForceExpandSize, out min, out preferred, out flexible);
 
                 float requiredSpace = Mathf.Clamp(innerSize, min, flexible > 0 ? size : preferred);
                 float startOffset = GetStartOffset(axis, requiredSpace);
                 if (controlSize)
                 {
-                    
-                    SetChildAlongAxis(child, axis, startOffset, requiredSpace);
-//                    _loopModels[i].RefreshCellRect(child,axis);
                     _loopModels[i].RefreshCellSizeData(axis, startOffset, requiredSpace);
                 }
                 else
                 {
-
                     float offsetInCell = (requiredSpace - child.sizeDelta[axis]) * alignmentOnAxis;
-                    SetChildAlongAxis(child, axis, startOffset + offsetInCell);
-//                    _loopModels[i].RefreshCellRect(child,axis);
                     _loopModels[i].RefreshCellSizeData(axis, startOffset + offsetInCell, child.sizeDelta[axis]);
                 }
                 ObjectPool.ReturnObject(go);
@@ -170,24 +164,19 @@ public abstract class LoopHorizontalOrVerticalLayout : HorizontalOrVerticalLayou
                 var go = ObjectPool.GetObject(_loopModels[i].CellType);
                 var child = go.transform as RectTransform;
                 float min, preferred, flexible;
-                LoopCalUtil.RefreshViewAndRebuild(go,_loopModels[i]);
+                LoopCalUtil.RefreshViewAndRebuild(axis,go,_loopModels[i]);
                 LoopCalUtil.GetChildSizes(child,axis, controlSize, childForceExpandSize, out min, out preferred, out flexible);
 
                 float childSize = Mathf.Lerp(min, preferred, minMaxLerp);
                 childSize += flexible * itemFlexibleMultiplier;
                 if (controlSize)
                 {
-                    
-                    SetChildAlongAxis(child, axis, pos, childSize);
-//                    _loopModels[i].RefreshCellRect(child,axis);
+
                     _loopModels[i].RefreshCellSizeData(axis,pos,childSize);
                 }
                 else
                 {
-
                     float offsetInCell = (childSize - child.sizeDelta[axis]) * alignmentOnAxis;
-                    SetChildAlongAxis(child, axis, pos + offsetInCell);
-//                    _loopModels[i].RefreshCellRect(child,axis);
                     _loopModels[i].RefreshCellSizeData(axis, pos + offsetInCell, child.sizeDelta[axis]);
                     
                 }

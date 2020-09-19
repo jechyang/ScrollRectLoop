@@ -8,6 +8,8 @@ public abstract class BaseLoopModel
     private Vector2 _startOffsets = new Vector2();
     private Vector2 _sizes = new Vector2();
 
+    public Vector2 Sizes => _sizes;
+
     public abstract CellEnum CellType { get; }
 
     public void RefreshCellRect()

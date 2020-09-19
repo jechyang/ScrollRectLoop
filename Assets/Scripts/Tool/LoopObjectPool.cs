@@ -10,11 +10,20 @@ public class LoopObjectPool
     private Dictionary<CellEnum,GameObject> _prefabDic = new Dictionary<CellEnum, GameObject>();
     private Dictionary<CellEnum, Type> _cellTypeDic = new Dictionary<CellEnum, Type>();
     private RectTransform _contentTrans;
+    private RectTransform _objectPoolContainer;
 
 
     public void SetLoopContent(RectTransform contentTrans)
     {
         _contentTrans = contentTrans;
+        if (_objectPoolContainer == null)
+        {
+            var go = new GameObject("ObjectPoolContainer");
+            _objectPoolContainer = go.AddComponent<RectTransform>();
+            _objectPoolContainer.SetParent(_contentTrans.parent);
+            _objectPoolContainer.localPosition = Vector3.zero;
+            _objectPoolContainer.localScale = Vector3.one;
+        }
     }
 
     public void RegisterCell(CellEnum cellEnum,GameObject gameObject,Type cellType)
@@ -63,7 +72,7 @@ public class LoopObjectPool
         cell.OnReset();
         if (_poolDic.TryGetValue(cellEnum, out var queue))
         {
-            go.transform.SetParent(null);
+            go.transform.SetParent(_objectPoolContainer);
             go.SetActive(false);
             queue.Enqueue(go);
         }

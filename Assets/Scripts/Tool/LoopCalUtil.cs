@@ -25,8 +25,13 @@ public static class LoopCalUtil
             flexible = Mathf.Max(flexible, 1);
     }
 
-    public static void RefreshViewAndRebuild(GameObject go,BaseLoopModel model)
+    public static void RefreshViewAndRebuild(int axis,GameObject go,BaseLoopModel model)
     {
+        if (axis == 1)
+        {
+            var rectTrans = go.transform as RectTransform;
+            rectTrans.sizeDelta =  model.Sizes;
+        }
         var baseCell = go.GetComponent<BaseCell>();
         baseCell.BuildData(model);
         var rect = go.transform as RectTransform;

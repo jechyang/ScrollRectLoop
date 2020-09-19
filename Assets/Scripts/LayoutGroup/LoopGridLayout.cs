@@ -177,14 +177,6 @@ public class LoopGridLayout : LayoutGroup,ILoopLayout
         _onLayoutCalculateCompleteEvent = action;
     }
 
-//    private BaseCalUtil _calUtil;
-//
-//    public BaseCalUtil CalUtil
-//    {
-//        get => _calUtil;
-//        set => _calUtil = value;
-//    }
-
     private ContentSizeFitter _contentSizeFitter;
 
     private ContentSizeFitter contentSizeFitter =>
@@ -200,28 +192,15 @@ public class LoopGridLayout : LayoutGroup,ILoopLayout
         _onLayoutCalculateCompleteEvent?.Invoke();
     }
 
-    protected override void OnTransformChildrenChanged()
-    {
-        Debug.LogError("OnTransformChildrenChanged");
-    }
+    protected override void OnTransformChildrenChanged() {}
 
-    protected override void OnDidApplyAnimationProperties()
-    {
-        Debug.LogError("OnDidApplyAnimationProperties");
-    }
+    protected override void OnDidApplyAnimationProperties() { }
 
-    protected override void OnRectTransformDimensionsChange()
-    {
-        Debug.LogError("OnRectTransformDimensionsChange");
-    }
+    protected override void OnRectTransformDimensionsChange() { }
 
-    protected override void OnEnable()
-    {
-    }
+    protected override void OnEnable() { }
 
-    protected override void OnDisable()
-    {
-    }
+    protected override void OnDisable() { }
 
     /// <summary>
     /// Called by the layout system to calculate the horizontal layout size.
