@@ -3,10 +3,11 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 [RequireComponent(typeof(ScrollRect))]
-public class ScrollRectLoop : MonoBehaviour
+public class ScrollRectLoop : MonoBehaviour,IBeginDragHandler
 {
     private ScrollRect _scroll;
     public List<BaseLoopModel> LoopModels;
@@ -153,8 +154,58 @@ public class ScrollRectLoop : MonoBehaviour
         }
     }
 
+    private Coroutine _smoothMoveCo;
+
+    public void ScrollToIndex(int index,bool smoothMove = false,float duration = 0.1f)
+    {
+        var model = LoopModels[index];
+        var rect = model.GetCellRect();
+        var sizeDelta = contentRectTransform.sizeDelta;
+        var scrollSizeDelta = rectTransform.sizeDelta;
+        var normalizationDelta = sizeDelta - scrollSizeDelta;
+        var xNormalization = rect.xMin/ normalizationDelta[0];
+        var yNormalization = rect.yMin / normalizationDelta[1];
+        if (smoothMove)
+        {
+            var targetNormalizationPos = new Vector2(xNormalization, 1 - yNormalization);
+            _smoothMoveCo = StartCoroutine(SmoothMove(targetNormalizationPos,duration));
+        }
+        else
+        {
+            ScrollRectComp.normalizedPosition = new Vector2(xNormalization,1-yNormalization);   
+        }
+    }
+
+    private IEnumerator SmoothMove(Vector2 targetPos,float duration)
+    {
+        var currentPos = ScrollRectComp.normalizedPosition;
+        var time = 0f;
+        while (true)
+        {
+            var t = time / duration;
+            ScrollRectComp.normalizedPosition = Vector2.Lerp(currentPos,targetPos,t);
+            time += Time.deltaTime;
+            yield return null;
+            if (time >= duration)
+            {
+                ScrollRectComp.normalizedPosition = targetPos;
+                break;
+            }
+        }
+    }
+    
+    
+
     private void OnDestroy()
     {
         _objectPool.ClearPool();
+    }
+
+    public void OnBeginDrag(PointerEventData eventData)
+    {
+        if (_smoothMoveCo != null)
+        {
+            StopCoroutine(_smoothMoveCo);
+        }
     }
 }

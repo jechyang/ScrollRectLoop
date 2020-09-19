@@ -16,17 +16,24 @@ public class TestLayout : MonoBehaviour
     public RectTransform TestTrans;
     private ScrollRectLoop _rectLoop;
 
-    public Button TestBtn;
+    public Button TestAddCellBtn;
+    public Button TestFocusBtn;
+    
 
     private void Awake()
     {
         _rectLoop = GetComponent<ScrollRectLoop>();
         _rectLoop.RegisterCell(CellEnum.Test,TestTrans.gameObject,typeof(TestCell));
-        TestBtn.onClick.AddListener(() =>
+        TestAddCellBtn.onClick.AddListener(() =>
         {
             var models = GetTestModels();
             _rectLoop.LoopModels = models;
             _rectLoop.RefreshView();
+        });
+        
+        TestFocusBtn.onClick.AddListener(() =>
+        {
+            _rectLoop.ScrollToIndex(5,true);
         });
     }
 
